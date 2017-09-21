@@ -2,20 +2,23 @@ import cv2
 import numpy 
 
 hsvColor=None
+lower_hue=None
+upper_hue=None
 cap = cv2.VideoCapture(0)
 
 if cap==None:exit()
 
 def takePhoto():
+	global hsvColor, lower_hue, upper_hue
 	cv2.waitKey(0)
 	# Take each frame
 	_, frame = cap.read()
 	height=len(frame)
 	width=len(frame[0])
-	y=height*.25
-	yEnd=height*.75
-	x=width*.25
-	xEnd=width*.75
+	y=height*.40
+	yEnd=height*.60
+	x=width*.40
+	xEnd=width*.60
 	#crop to get center
 	croppedFrame =frame[y:yEnd,x:xEnd] 
 	# Crop from x, y, w, h -> 100, 200, 300, 400
@@ -29,12 +32,23 @@ def takePhoto():
 	#To get color for HSV
 	average_color=numpy.uint8([[average_color]])
 	hsvColor=cv2.cvtColor(average_color,cv2.COLOR_BGR2HSV)	
+	#print "HSV",hsvColor ,"lower_hue",(hsvColor[0][0][0]-30)%360
+	lower_hue=(hsvColor[0][0][0]-5)%360
+	upper_hue=(hsvColor[0][0][0]+5)%360
 	
+	#to write into file
+	file=open("blueHue","w")
+	file.write(str(lower_hue))
+	file.write("\n")
+	file.write(str(upper_hue))
+	file.close()
 	cv2.imshow("original",frame)
 	cv2.imshow("cropped", croppedFrame)
 	cv2.waitKey(0)
+
 takePhoto()		
-lower_hue=hsvColo[0]
+
+
 while(1):
 
     # Take each frame
@@ -43,10 +57,14 @@ while(1):
     # Convert BGR to HSV
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-
+    if lower_hue>upper_hue:
+		if 360-lower_hue<upper_hue:
+			lower_hue=0
+		else:
+			upper_hue=360
     # define range of blue color in HSV
-    lower_blue = np.array([,50,50])
-    upper_blue = np.array([110,255,255])
+    lower_blue = numpy.array([lower_hue,50,50])
+    upper_blue = numpy.array([upper_hue,255,255])
 
     # Threshold the HSV image to get only blue colors
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
@@ -56,7 +74,7 @@ while(1):
     res = cv2.bitwise_and(frame,frame, mask= mask)
     cv2.imshow('frame',frame)
     cv2.imshow('mask',mask)
-    #cv2.imshow('res',res)
+    cv2.imshow('res',res)
 
 
 
@@ -66,5 +84,5 @@ while(1):
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
         break
-"""
+
 
