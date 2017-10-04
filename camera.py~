@@ -8,7 +8,7 @@ def mapx(x):
 def mapy(y):
    z=(y)/(479)*(242-50)+50
    return z
-cap = cv2.VideoCapture(00)
+cap = cv2.VideoCapture(0)
 
 if cap==None:exit()
 
@@ -16,9 +16,9 @@ while(1):
 
     # Take each frame
     _, frame = cap.read()
-    frame=cv2.flip(frame,1)
-    cv2.rectangle(frame,(250,50),(592,242),(0,0,255),5);
-    crop=frame[50:242,250:592]	
+    #frame=cv2.flip(frame,1)
+    cv2.rectangle(frame,(50,50),(392,242),(0,255,0),5);
+    crop=frame[50:242,50:392]	
     # Convert BGR to HSV
     hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
     #print cap.get(3)
@@ -94,7 +94,7 @@ while(1):
 		M = cv2.moments(c)
 		center_green = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		#if not (center_blue == None) and not (center_green == None) :print (center_blue[0]-center_green[0])**2+(center_blue[1]-center_green[1])**2
-    		if not (center_blue == None) and (center_blue[0]-center_green[0])**2+(center_blue[1]-center_green[1])**2<1000:	pyautogui.click(center_blue[0]*4,center_blue[1]*4)
+    		if not (center_blue == None) and (center_blue[0]-center_green[0])**2+(center_blue[1]-center_green[1])**2<10000:	pyautogui.click(center_blue[0]*4,center_blue[1]*4)
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
            break
