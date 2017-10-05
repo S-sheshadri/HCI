@@ -3,13 +3,17 @@ import numpy
 
 hsvColor=None
 lower_hue=None
+lower_val=None
+lower_sat=None
+upper_sat=None
+upper_val=None
 upper_hue=None
 cap = cv2.VideoCapture(0)
 
 if cap==None:exit()
 
 def takePhoto():
-	global hsvColor, lower_hue, upper_hue
+	global lower_val, upper_val, lower_sat, upper_sat, hsvColor, lower_hue, upper_hue
 	cv2.waitKey(0)
 	# Take each frame
 	_, frame = cap.read()
@@ -33,14 +37,26 @@ def takePhoto():
 	average_color=numpy.uint8([[average_color]])
 	hsvColor=cv2.cvtColor(average_color,cv2.COLOR_BGR2HSV)	
 	#print "HSV",hsvColor ,"lower_hue",(hsvColor[0][0][0]-30)%360
-	lower_hue=(hsvColor[0][0][0]-5)%360
-	upper_hue=(hsvColor[0][0][0]+5)%360
-	
+	lower_hue=(hsvColor[0][0][0]-15)%180
+	upper_hue=(hsvColor[0][0][0]+15)%180
+	lower_sat=(hsvColor[0][0][1]-15)%256
+	upper_sat=(hsvColor[0][0][1]+15)%256
+	lower_val=(hsvColor[0][0][2]-15)%256
+	upper_val=(hsvColor[0][0][2]+15)%256
+
 	#to write into file
 	file=open("blueHue","w")
 	file.write(str(lower_hue))
 	file.write("\n")
 	file.write(str(upper_hue))
+	file.write("\n")
+	file.write(str(lower_sat))
+	file.write("\n")
+	file.write(str(upper_sat))
+	file.write("\n")
+	file.write(str(lower_val))
+	file.write("\n")
+	file.write(str(upper_val))
 	file.close()
 	cv2.imshow("original",frame)
 	cv2.imshow("cropped", croppedFrame)
